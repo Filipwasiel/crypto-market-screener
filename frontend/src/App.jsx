@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import {
   Alert,
   Box,
@@ -7,22 +7,55 @@ import {
   CssBaseline,
   Typography,
   Pagination,
+  IconButton,
 } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 
 import CryptoTable from './components/CryptoTable'
 import FilterBar from './components/FilterBar'
 import { fetchCoins } from './services/api'
 
-const theme = createTheme({
-  palette: {
-    primary: { main: '#1976d2' },
-    secondary: { main: '#f57c00' },
-  },
-})
-
 export default function App() {
+  const [mode, setMode] = useState('dark')
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+          primary: { main: mode === 'light' ? '#2563eb' : '#3b82f6' }, // Modern blues
+          secondary: { main: '#f59e0b' }, // Amber
+          background: {
+            default: mode === 'light' ? '#f8fafc' : '#0f172a',
+            paper: mode === 'light' ? '#ffffff' : '#1e293b',
+          },
+        },
+        shape: {
+          borderRadius: 16,
+        },
+        typography: {
+          fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+          h4: { fontWeight: 800, letterSpacing: '-0.03em' },
+        },
+        components: {
+          MuiButton: {
+            styleOverrides: {
+              root: { textTransform: 'none', fontWeight: 600 },
+            },
+          },
+          MuiPaper: {
+            styleOverrides: {
+              root: { backgroundImage: 'none' },
+            },
+          },
+        },
+      }),
+    [mode],
+  )
+
   const [coins, setCoins] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -64,16 +97,31 @@ export default function App() {
       <CssBaseline />
       <Container maxWidth="xl" sx={{ py: 4 }}>
         {/* Header */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-          <CurrencyBitcoinIcon sx={{ fontSize: 40, color: 'secondary.main' }} />
-          <Box>
-            <Typography variant="h4" fontWeight="bold">
-              Crypto Market Screener
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Real-time cryptocurrency data powered by CoinGecko
-            </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 4 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Box sx={{ 
+              display: 'flex', p: 1, borderRadius: 3, 
+              bgcolor: mode === 'light' ? 'primary.50' : 'rgba(59, 130, 246, 0.1)',
+              color: 'primary.main' 
+            }}>
+              <CurrencyBitcoinIcon sx={{ fontSize: 36 }} />
+            </Box>
+            <Box>
+              <Typography variant="h4">
+                Crypto Screener
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Real-time market data powered by CoinGecko
+              </Typography>
+            </Box>
           </Box>
+          <IconButton 
+            sx={{ ml: 1, bgcolor: mode === 'light' ? 'grey.100' : 'rgba(255, 255, 255, 0.05)' }} 
+            onClick={() => setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))} 
+            color="inherit"
+          >
+            {mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
         </Box>
 
         {/* Filters */}

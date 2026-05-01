@@ -49,10 +49,10 @@ export default function CryptoTable({ coins }) {
   }
 
   return (
-    <TableContainer component={Paper} elevation={2}>
-      <Table size="small" aria-label="crypto market table">
+    <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 3, border: '1px solid', borderColor: 'divider', padding: 3 }}>
+      <Table size="small" aria-label="crypto market table" sx={{ minWidth: 650 }}>
         <TableHead>
-          <TableRow sx={{ '& th': { fontWeight: 'bold', bgcolor: 'grey.100' } }}>
+          <TableRow sx={{ '& th': { fontWeight: '600', bgcolor: 'action.hover', whiteSpace: 'nowrap' } }}>
             <TableCell>#</TableCell>
             <TableCell>Coin</TableCell>
             <TableCell align="right">Price</TableCell>
@@ -67,14 +67,14 @@ export default function CryptoTable({ coins }) {
             <TableRow
               key={coin.id}
               hover
-              sx={{ '&:last-child td': { border: 0 } }}
+              sx={{ '&:last-child td': { border: 0 }, '& td': { whiteSpace: 'nowrap' } }}
             >
               <TableCell>{coin.market_cap_rank ?? '—'}</TableCell>
               <TableCell>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Avatar src={coin.image} alt={coin.name} sx={{ width: 24, height: 24 }} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                  <Avatar src={coin.image} alt={coin.name} sx={{ width: 28, height: 28 }} />
                   <Box>
-                    <Typography variant="body2" fontWeight="bold">
+                    <Typography variant="body2" fontWeight="600">
                       {coin.name}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
@@ -91,7 +91,7 @@ export default function CryptoTable({ coins }) {
               <TableCell align="right">
                 <PriceChange value={coin.price_change_percentage_24h} />
               </TableCell>
-              <TableCell align="right">{formatNumber(coin.market_cap)}</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 500 }}>{formatNumber(coin.market_cap)}</TableCell>
               <TableCell align="right">{formatNumber(coin.total_volume)}</TableCell>
               <TableCell align="right">
                 {coin.circulating_supply != null
