@@ -59,7 +59,7 @@ export default function CryptoTable({ coins, onRowClick }) {
             <TableCell align="right">24h %</TableCell>
             <TableCell align="right">Market Cap</TableCell>
             <TableCell align="right">Volume (24h)</TableCell>
-            <TableCell align="right">Circulating Supply</TableCell>
+            <TableCell align="right">FDV</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -94,11 +94,7 @@ export default function CryptoTable({ coins, onRowClick }) {
               </TableCell>
               <TableCell align="right" sx={{ fontWeight: 500 }}>{formatNumber(coin.market_cap)}</TableCell>
               <TableCell align="right">{formatNumber(coin.total_volume)}</TableCell>
-              <TableCell align="right">
-                {coin.circulating_supply != null
-                  ? `${coin.circulating_supply.toLocaleString(undefined, { maximumFractionDigits: 0 })} ${coin.symbol?.toUpperCase()}`
-                  : '—'}
-              </TableCell>
+              <TableCell align="right">{formatNumber(coin.fully_diluted_valuation)}</TableCell>
             </TableRow>
           ))}
         </TableBody>

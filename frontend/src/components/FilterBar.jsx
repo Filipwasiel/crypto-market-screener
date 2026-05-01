@@ -7,17 +7,16 @@ import {
   Paper,
   TextField,
   Typography,
+  MenuItem,
 } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import FilterListIcon from '@mui/icons-material/FilterList'
 
 const defaultFilters = {
   search: '',
-  minPrice: '',
-  maxPrice: '',
-  minMarketCap: '',
-  minChange24h: '',
-  maxChange24h: '',
+  maxFdv: '',
+  sortBy: 'market_cap',
+  sortOrder: 'desc',
 }
 
 export default function FilterBar({ onSearch, loading }) {
@@ -40,7 +39,7 @@ export default function FilterBar({ onSearch, loading }) {
   return (
     <Paper elevation={0} sx={{ p: 3, mb: 4, borderRadius: 3, border: '1px solid', borderColor: 'divider' }}>
       <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3, fontWeight: 600 }}>
-        <FilterListIcon /> Filters
+        <FilterListIcon /> Filters & Sorting
       </Typography>
       <Box component="form" onSubmit={handleSubmit}>
         <Grid container spacing={3}>
@@ -64,65 +63,43 @@ export default function FilterBar({ onSearch, loading }) {
               }}
             />
           </Grid>
-          <Grid size={{ xs: 6, sm: 3, md: 2 }}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <TextField
               fullWidth
-              label="Min Price ($)"
-              name="minPrice"
+              label="Max FDV ($)"
+              name="maxFdv"
               type="number"
-              value={filters.minPrice}
+              value={filters.maxFdv}
               onChange={handleChange}
               inputProps={{ min: 0, step: 'any' }}
               slotProps={{ inputLabel: { shrink: true } }}
             />
           </Grid>
-          <Grid size={{ xs: 6, sm: 3, md: 2 }}>
+          <Grid size={{ xs: 6, sm: 6, md: 3 }}>
             <TextField
+              select
               fullWidth
-              label="Max Price ($)"
-              name="maxPrice"
-              type="number"
-              value={filters.maxPrice}
+              label="Sort By"
+              name="sortBy"
+              value={filters.sortBy}
               onChange={handleChange}
-              inputProps={{ min: 0, step: 'any' }}
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
+            >
+              <MenuItem value="market_cap">Market Cap</MenuItem>
+              <MenuItem value="volume">24h Volume</MenuItem>
+            </TextField>
           </Grid>
-          <Grid size={{ xs: 12, sm: 4, md: 2 }}>
+          <Grid size={{ xs: 6, sm: 6, md: 2 }}>
             <TextField
+              select
               fullWidth
-              label="Min Cap ($)"
-              name="minMarketCap"
-              type="number"
-              value={filters.minMarketCap}
+              label="Order"
+              name="sortOrder"
+              value={filters.sortOrder}
               onChange={handleChange}
-              inputProps={{ min: 0, step: 'any' }}
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
-          </Grid>
-          <Grid size={{ xs: 6, sm: 4, md: 1 }}>
-            <TextField
-              fullWidth
-              label="Min 24h %"
-              name="minChange24h"
-              type="number"
-              value={filters.minChange24h}
-              onChange={handleChange}
-              inputProps={{ step: 'any' }}
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
-          </Grid>
-          <Grid size={{ xs: 6, sm: 4, md: 1 }}>
-            <TextField
-              fullWidth
-              label="Max 24h %"
-              name="maxChange24h"
-              type="number"
-              value={filters.maxChange24h}
-              onChange={handleChange}
-              inputProps={{ step: 'any' }}
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
+            >
+              <MenuItem value="desc">Descending</MenuItem>
+              <MenuItem value="asc">Ascending</MenuItem>
+            </TextField>
           </Grid>
         </Grid>
         <Box sx={{ mt: 3, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 2 }}>
