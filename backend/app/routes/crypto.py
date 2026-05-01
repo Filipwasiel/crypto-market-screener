@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query
 
 from app.models import Coin
-from app.services.crypto_service import apply_filters, fetch_coins
+from app.services.crypto_service import apply_filters, apply_strict_rules, fetch_coins
 
 router = APIRouter()
 

@@ -13,3 +13,9 @@ class Coin(BaseModel):
     total_volume: Optional[float] = None
     price_change_percentage_24h: Optional[float] = None
     circulating_supply: Optional[float] = None
+    fully_diluted_valuation: Optional[float] = None
+    total_supply: Optional[float] = None
+    max_supply: Optional[float] = None
+    tvl: Optional[float] = None
+    preview_listing: Optional[bool] = None
+
