@@ -16,6 +16,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7'
 
 import CryptoTable from './components/CryptoTable'
 import FilterBar from './components/FilterBar'
+import CoinDetailsModal from './components/CoinDetailsModal'
 import { fetchCoins } from './services/api'
 
 export default function App() {
@@ -61,6 +62,7 @@ export default function App() {
   const [error, setError] = useState(null)
   const [currentFilters, setCurrentFilters] = useState({})
   const [page, setPage] = useState(1)
+  const [selectedCoinId, setSelectedCoinId] = useState(null)
 
   const loadCoins = useCallback(async (filters = {}) => {
     setLoading(true)
@@ -147,7 +149,7 @@ export default function App() {
             <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
               {coins.length} coin{coins.length !== 1 ? 's' : ''} found
             </Typography>
-            <CryptoTable coins={coins} />
+            <CryptoTable coins={coins} onRowClick={(id) => setSelectedCoinId(id)} />
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
               <Pagination 
                 count={100} 
@@ -159,6 +161,12 @@ export default function App() {
             </Box>
           </>
         )}
+
+        <CoinDetailsModal 
+          open={!!selectedCoinId} 
+          coinId={selectedCoinId} 
+          onClose={() => setSelectedCoinId(null)} 
+        />
       </Container>
     </ThemeProvider>
   )

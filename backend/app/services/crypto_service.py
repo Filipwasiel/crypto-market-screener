@@ -9,6 +9,7 @@ COINGECKO_BASE_URL = "https://api.coingecko.com/api/v3"
 
 # Cache structure: { cache_key: (data, timestamp) }
 _CACHE: Dict[Tuple[str, int, int], Tuple[List[dict], float]] = {}
+_DETAILS_CACHE: Dict[str, Tuple[dict, float]] = {}
 CACHE_TTL = 60  # seconds
 
 # Lock to prevent concurrent fetches for the same data
@@ -51,6 +52,38 @@ async def fetch_coins(
             data = response.json()
             _CACHE[cache_key] = (data, time.time())
             return data
+
+async def fetch_coin_details(coin_id: str) -> dict:
+    """Fetch detailed coin data from CoinGecko, with caching."""
+    now = time.time()
+    
+    if coin_id in _DETAILS_CACHE:
+        cached_data, timestamp = _DETAILS_CACHE[coin_id]
+        if now - timestamp < CACHE_TTL:
+            return cached_data
+
+    async with _FETCH_LOCK:
+        if coin_id in _DETAILS_CACHE:
+            cached_data, timestamp = _DETAILS_CACHE[coin_id]
+            if time.time() - timestamp < CACHE_TTL:
+                return cached_data
+
+        url = f"{COINGECKO_BASE_URL}/coins/{coin_id}"
+        params = {
+            "localization": "false",
+            "tickers": "false",
+            "market_data": "true",
+            "community_data": "false",
+            "developer_data": "false",
+            "sparkline": "false"
+        }
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            response = await client.get(url, params=params)
+            response.raise_for_status()
+            data = response.json()
+            _DETAILS_CACHE[coin_id] = (data, time.time())
+            return data
+
 
 
 def apply_filters(

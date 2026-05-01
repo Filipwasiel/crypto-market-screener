@@ -25,3 +25,14 @@ export async function fetchCoins(filters = {}) {
   const response = await axios.get(`${BASE_URL}/coins`, { params })
   return response.data
 }
+
+/**
+ * Fetch detailed information for a specific coin.
+ * @param {string} coinId 
+ * @returns {Promise<Object>}
+ */
+export async function fetchCoinDetails(coinId) {
+  const response = await axios.get(`${BASE_URL}/coins/${coinId}`)
+  return response.data
+}
+

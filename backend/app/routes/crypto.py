@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query
 
 from app.models import Coin
-from app.services.crypto_service import apply_filters, apply_strict_rules, fetch_coins
+from app.services.crypto_service import apply_filters, apply_strict_rules, fetch_coins, fetch_coin_details
 
 router = APIRouter()
 
@@ -58,4 +58,13 @@ async def get_strict_screener_coins(
 
     filtered = apply_strict_rules(coins)
     return [Coin(**c) for c in filtered]
+
+@router.get("/coins/{coin_id}")
+async def get_coin_details(coin_id: str):
+    try:
+        data = await fetch_coin_details(coin_id)
+        return data
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"CoinGecko error: {exc}") from exc
+
 

@@ -37,7 +37,7 @@ function PriceChange({ value }) {
   )
 }
 
-export default function CryptoTable({ coins }) {
+export default function CryptoTable({ coins, onRowClick }) {
   if (!coins || coins.length === 0) {
     return (
       <Box sx={{ textAlign: 'center', py: 6 }}>
@@ -67,7 +67,8 @@ export default function CryptoTable({ coins }) {
             <TableRow
               key={coin.id}
               hover
-              sx={{ '&:last-child td': { border: 0 }, '& td': { whiteSpace: 'nowrap' } }}
+              onClick={() => onRowClick && onRowClick(coin.id)}
+              sx={{ '&:last-child td': { border: 0 }, '& td': { whiteSpace: 'nowrap' }, cursor: 'pointer' }}
             >
               <TableCell>{coin.market_cap_rank ?? '—'}</TableCell>
               <TableCell>
