@@ -6,6 +6,7 @@ import {
   Container,
   CssBaseline,
   Typography,
+  Pagination,
 } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CurrencyBitcoinIcon from '@mui/icons-material/CurrencyBitcoin'
@@ -25,6 +26,8 @@ export default function App() {
   const [coins, setCoins] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [currentFilters, setCurrentFilters] = useState({})
+  const [page, setPage] = useState(1)
 
   const loadCoins = useCallback(async (filters = {}) => {
     setLoading(true)
@@ -41,8 +44,19 @@ export default function App() {
     }
   }, [])
 
+  const handleSearch = useCallback((filters) => {
+    setCurrentFilters(filters)
+    setPage(1)
+    loadCoins({ ...filters, page: 1 })
+  }, [loadCoins])
+
+  const handlePageChange = useCallback((event, value) => {
+    setPage(value)
+    loadCoins({ ...currentFilters, page: value })
+  }, [currentFilters, loadCoins])
+
   useEffect(() => {
-    loadCoins()
+    loadCoins({ page: 1 })
   }, [loadCoins])
 
   return (
@@ -63,7 +77,7 @@ export default function App() {
         </Box>
 
         {/* Filters */}
-        <FilterBar onSearch={loadCoins} loading={loading} />
+        <FilterBar onSearch={handleSearch} loading={loading} />
 
         {/* Error */}
         {error && (
@@ -86,6 +100,15 @@ export default function App() {
               {coins.length} coin{coins.length !== 1 ? 's' : ''} found
             </Typography>
             <CryptoTable coins={coins} />
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+              <Pagination 
+                count={100} 
+                page={page} 
+                onChange={handlePageChange} 
+                color="primary" 
+                disabled={loading}
+              />
+            </Box>
           </>
         )}
       </Container>

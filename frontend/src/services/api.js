@@ -20,6 +20,7 @@ export async function fetchCoins(filters = {}) {
   if (filters.maxChange24h !== '' && filters.maxChange24h != null)
     params.max_change_24h = filters.maxChange24h
   if (filters.perPage) params.per_page = filters.perPage
+  if (filters.page) params.page = filters.page
 
   const response = await axios.get(`${BASE_URL}/coins`, { params })
   return response.data

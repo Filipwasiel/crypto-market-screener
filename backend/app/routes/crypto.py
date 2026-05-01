@@ -40,3 +40,22 @@ async def get_coins(
     )
 
     return [Coin(**c) for c in filtered]
+
+@router.get("/strict-screener", response_model=List[Coin])
+async def get_strict_screener_coins(
+    vs_currency: str = Query("usd", description="Currency for prices"),
+    per_page: int = Query(100, ge=1, le=250, description="Number of coins to fetch"),
+    page: int = Query(1, ge=1, description="Page number"),
+):
+    try:
+        coins = await fetch_coins(
+            vs_currency=vs_currency,
+            per_page=per_page,
+            page=page,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"CoinGecko error: {exc}") from exc
+
+    filtered = apply_strict_rules(coins)
+    return [Coin(**c) for c in filtered]
+
